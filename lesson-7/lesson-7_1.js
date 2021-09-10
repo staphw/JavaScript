@@ -267,7 +267,6 @@ const game = {
     render() {
         this.map.render(this.snake.body, this.food.getCoordinates());
         let out_score = document.getElementById('score');
-//        out_score.textContent = `Счет: ${this.score}`;
         out_score.innerHTML = `Счет: ${this.score}`;
     },
 
