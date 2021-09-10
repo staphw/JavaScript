@@ -1,4 +1,8 @@
+// Задание 1
+// 1. Выводить счёт в режиме реального времени.
+
 "use strict";
+
 const settings = {
     rowsCount: 21,
     colsCount: 21,
@@ -8,7 +12,6 @@ const settings = {
 
 const config = {
     settings,
-
     init(userSettings) {
         Object.assign(this.settings, userSettings);
     },
@@ -221,6 +224,7 @@ const game = {
     snake,
     food,
     status,
+    score: 0,
     tickInterval: null,
 
     init(userSettings = {}) {
@@ -256,11 +260,15 @@ const game = {
         this.stop();
         this.snake.init(this.getStartSnakeBody(), 'up');
         this.food.setCoordinates(this.getRandomFreeCoordinates());
+        this.score = 0;
         this.render();
     },
 
     render() {
         this.map.render(this.snake.body, this.food.getCoordinates());
+        let out_score = document.getElementById('score');
+//        out_score.textContent = `Счет: ${this.score}`;
+        out_score.innerHTML = `Счет: ${this.score}`;
     },
 
     getStartSnakeBody() {
@@ -360,13 +368,21 @@ const game = {
     },
 
     tickHandler() {
-        if (!this.canMakeStep()) return this.finish();
+        if (!this.canMakeStep()) {
+            alert('You lose');
+            return this.finish();
+        } 
 
         if (this.food.isOnPoint(this.snake.getNextHeadPoint())) {
             this.snake.growUp();
             this.food.setCoordinates(this.getRandomFreeCoordinates());
+            
+            this.score++;
 
-            if (this.isGameWon()) this.finish();
+            if (this.isGameWon()) {
+                alert('You win');
+                this.finish();
+            }
         }
 
         this.snake.makeStep();
@@ -388,4 +404,4 @@ const game = {
     }
 };
 
-game.init({speed: 5});
+game.init({speed: 5, winFoodCount: 10});
